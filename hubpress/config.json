@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "roon"
+    "name": "casper"
   },
   "urls": {
     "site": "https://icthieves.github.io",
     "hubpress": "https://icthieves.github.io",
-    "theme": "//icthieves.github.io/themes/ghostium",
+    "theme": "//icthieves.github.io/themes/roon",
     "images": "https://icthieves.github.io/images"
   },
   "initialisationConfigComponent": {
