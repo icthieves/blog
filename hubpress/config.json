@@ -11,7 +11,7 @@
   "urls": {
     "site": "https://icthieves.github.io",
     "hubpress": "https://icthieves.github.io",
-    "theme": "//icthieves.github.io/themes/roon",
+    "theme": "//icthieves.github.io/themes/casper",
     "images": "https://icthieves.github.io/images"
   },
   "initialisationConfigComponent": {
@@ -25,10 +25,10 @@
     ]
   },
   "site": {
-    "title": "",
-    "description": "",
+    "title": "Infosec/CTF Nots",
+    "description": "Notes, Write-ups, and Stories from my studies",
     "logo": "",
-    "cover": "",
+    "cover": "/images/covers/heart-circuit.jpg",
     "delay": "",
     "postsPerPage": "",
     "googleAnalytics": "",
