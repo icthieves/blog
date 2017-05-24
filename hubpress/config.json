@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "ichi"
+    "name": "ghostium"
   },
   "urls": {
     "site": "https://icthieves.github.io",
     "hubpress": "https://icthieves.github.io",
-    "theme": "//icthieves.github.io/themes/ghostium",
+    "theme": "//icthieves.github.io/themes/ichi",
     "images": "https://icthieves.github.io/images"
   },
   "initialisationConfigComponent": {
