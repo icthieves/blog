@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "ghostium"
+    "name": "roon"
   },
   "urls": {
     "site": "https://icthieves.github.io",
     "hubpress": "https://icthieves.github.io",
-    "theme": "//icthieves.github.io/themes/ichi",
+    "theme": "//icthieves.github.io/themes/ghostium",
     "images": "https://icthieves.github.io/images"
   },
   "initialisationConfigComponent": {
