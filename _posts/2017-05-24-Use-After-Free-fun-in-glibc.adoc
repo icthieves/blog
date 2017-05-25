@@ -28,6 +28,13 @@ Notice that both the Man* and Woman* from the *new* keyword are cast to *Human**
 
 (This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)
 
+
+
+This is a good time to take a look at the *Human* class and its subclasses.
+image::/images/blog/uaf/human.png
+
+Now let's look at the last option in the switch block.
+
 > [3] Delete (and deconstruct) both the Man and Woman objects.
 
 Huh, so we can delete the objects, then use their newly invalidated pointers to call a function.
