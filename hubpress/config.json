@@ -25,7 +25,7 @@
     ]
   },
   "site": {
-    "title": "<html><span style=\"color:blue\"><nfosec/CTF Notes</span></html>",
+    "title": "Infosec/CTF Notes",
     "description": "Notes, Write-ups, and Stories from my studies",
     "logo": "",
     "cover": "/images/covers/space.jpg",
