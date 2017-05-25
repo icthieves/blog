@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 25 May 2017 19:43:21 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 25 May 2017 19:55:37 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
 <h4 id="_challenge_description">Challenge Description:</h4>
 <div class="quoteblock">
 <blockquote>
@@ -45,8 +45,16 @@ We are prompted with three options:</p>
 <p>(This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)</p>
 </div>
 <div class="paragraph">
-<p>This is a good time to take a look at the <strong>Human</strong> class and its subclasses.
-image::/images/blog/uaf/human.png</p>
+<p>This is a good time to take a look at the <strong>Human</strong> class and its subclasses.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/human.png" alt="The Human class and it's subclasses.">
+</div>
+</div>
+<div class="paragraph">
+<p>We can immediately see the goal of this challenge: find a way to call <strong>give_shell()</strong> in the <strong>Human</strong> class.
+Notice that the class contains two <em>virtual functions</em>, only one of which is overwritten by the subclasses.</p>
 </div>
 <div class="paragraph">
 <p>Now let&#8217;s look at the last option in the switch block.</p>
