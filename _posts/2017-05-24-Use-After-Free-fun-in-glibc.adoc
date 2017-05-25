@@ -26,9 +26,20 @@ We are prompted with three options:
 
 Notice that both the Man* and Woman* from the *new* keyword are cast to *Human**. Clearly, this objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), _A function with the same prototype, using two upcasted objects._ Either we are calling the *introduce()* method of the Human class, or there's some as yet unseen polymorphism mechanism that de-obfuscates our function call. Running the code, you can see that *Man->introduce()* and *Woman->introduce()* _do not produce the same output for identical calls_, therefore, *they must be virtual functions.*
 
-###### (This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)
+(This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)
 
 > [3] Delete (and deconstruct) both the Man and Woman objects.
+
+Huh, so we can delete the objects, then use their newly invalidated pointers to call a function.
+
+image::images/blog/uaf/segfault.png["Segfault by accessing a dangling pointer."]
+
+
+
+
+
+
+
 
 
 
