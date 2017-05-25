@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1495738826843" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1495741134812" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -150,7 +150,14 @@ We are prompted with three options:</p>
 </div>
 <div class="paragraph">
 <p>So, it&#8217;s clearly possible to <em>use</em> our pointers <em>after they are free&#8217;d</em>, but what weirdness can we cause with this?
-Well, this is where you would start googling "use after free", and eventually you might find <a href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">this extremely good article on glibc&#8217;s malloc() internals</a>, and <a href="https://sourceware.org/glibc/wiki/MallocInternals">this very handy reference for glibc malloc()</a>, Both of which are required reading to understand the rest of this exploit and write-up.</p>
+Well, this is where you would start googling "use after free", and eventually you might find <a href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">this extremely good article on glibc&#8217;s malloc() internals</a>, and <a href="https://sourceware.org/glibc/wiki/MallocInternals">this very handy reference for glibc malloc()</a>.</p>
+</div>
+<div class="paragraph">
+<p>After reading the articles linked above, you might start to see how a Use-After-Free vulnerability can be exploited. Because it is extremely expensive for a process to allocate memory through syscalls like <strong>sbrk()</strong> and <strong>mmap()</strong>, glibc <strong>malloc()</strong> avoids this as much as possible by maintaining sorted "bins" of unallocated memory.</p>
+</div>
+<div class="paragraph">
+<p>When <strong>malloc()</strong> is called, It first uses a best-fit algorithm and searches through it&#8217;s binlists for the first free chunk of adequate size. If one is found, It resizes the chunk (if necessary) and returns a pointer to the start of the chunk&#8217;s data section.
+That means if we <strong>free()</strong> and object, then <em>allocate something of the same size</em>, there is a 99% chance that we will get a pointer to <strong>exact same chunk that we just free&#8217;d.</strong></p>
 </div>
 </div>
         </section>
@@ -226,8 +233,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1495738826843"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1495738826843"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1495741134812"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1495741134812"></script>
 
 </body>
 </html>
