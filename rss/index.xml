@@ -1,1 +1,54 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Wed, 24 May 2017 22:15:57 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl></channel></rss>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 25 May 2017 18:38:20 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
+<h4 id="_challenge_description">Challenge Description:</h4>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Mommy, what is Use After Free bug?
+ssh <a href="mailto:uaf@pwnable.kr">uaf@pwnable.kr</a> -p2222 (pw:guest)</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_first_impressions">First Impressions:</h4>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/uaf1.png" alt="The Challenge Directory">
+</div>
+</div>
+<div class="paragraph">
+<p>Here we find the usual readable source code, executable binary, and unreadable flag.</p>
+</div>
+<div class="paragraph">
+<p>Looking at the source code we see that it defines a simple virtual class (Human) and its two subclasses (Man/Woman).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/main.png" alt="The uaf/cpp main() function">
+</div>
+</div>
+<div class="paragraph">
+<p>The switch block is what&#8217;s interesting to us at the moment.
+We are prompted with three options:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>[1] Call the <strong>introduce()</strong> method of both the Man and Woman objects.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Notice that both the Man* and Woman* from the <strong>new</strong> keyword are cast to <strong>Human</strong>*. Clearly, this objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), <em>A function with the same prototype, using two upcasted objects.</em> Either we are calling the <strong>introduce()</strong> method of the Human class, or there&#8217;s some as yet unseen polymorphism mechanism that de-obfuscates our function call. Running the code, you can see that <strong>Man&#8594;introduce()</strong> and <strong>Woman&#8594;introduce()</strong> <em>do not produce the same output for identical calls</em>, therefore, <strong>they must be virtual functions.</strong></p>
+</div>
+<div class="sect5">
+<h6 id="__this_is_of_course_extremely_obvious_because_the_classes_are_both_defined_in_this_same_readable_file_but_you_can_still_figure_out_a_lot_without_the_class_definitions">(This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)</h6>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>[3] Delete (and deconstruct) both the Man and Woman objects.</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>]]></description><link>https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html</link><guid isPermaLink="true">https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html</guid><category><![CDATA[use-after-free]]></category><category><![CDATA[pwnable.kr]]></category><category><![CDATA[ctf]]></category><category><![CDATA[writeups]]></category><pubDate>Wed, 24 May 2017 00:00:00 GMT</pubDate></item></channel></rss>
