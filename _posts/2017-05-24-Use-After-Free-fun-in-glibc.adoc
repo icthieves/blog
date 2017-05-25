@@ -31,7 +31,11 @@ Notice that both the Man* and Woman* from the *new* keyword are cast to *Human**
 
 
 This is a good time to take a look at the *Human* class and its subclasses.
-image::/images/blog/uaf/human.png
+
+image::/images/blog/uaf/human.png["The Human class and it's subclasses."]
+We can immediately see the goal of this challenge: find a way to call *give_shell()* in the *Human* class. 
+Notice that the class contains two _virtual functions_, only one of which is overwritten by the subclasses.
+
 
 Now let's look at the last option in the switch block.
 
