@@ -1,0 +1,35 @@
+= Pwnable.kr - UAF Writeup 
+//See https://hubpress.gitbooks.io/hubpress-knowledgebase content/ for information about the parameters.
+:hp-image: /images/covers/space.jpg
+:published_at: 2017-05-24
+:hp-tags: use-after-free, pwnable.kr, ctf, writeups
+:hp-alt-title: Use-After-Free fun in glibc!
+
+#### Challenge Description: 
+> Mommy, what is Use After Free bug?
+> ssh uaf@pwnable.kr -p2222 (pw:guest)
+
+#### First Impressions: 
+
+image::/images/blog/uaf/uaf1.png["The Challenge Directory"]
+
+Here we find the usual readable source code, executable binary, and unreadable flag.
+
+Looking at the source code we see that it defines a simple virtual class (Human) and its two subclasses (Man/Woman).
+
+image::/images/blog/uaf/main.png["The uaf/cpp main() function"]
+
+The switch block is what's interesting to us at the moment.
+We are prompted with three options:
+
+> [1] Call the *introduce()* method of both the Man and Woman objects.
+
+Notice that both the Man* and Woman* from the *new* keyword are cast to *Human**. Clearly, this objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), _A function with the same prototype, using two upcasted objects._ Either we are calling the *introduce()* method of the Human class, or there's some as yet unseen polymorphism mechanism that de-obfuscates our function call. Running the code, you can see that *Man->introduce()* and *Woman->introduce()* _do not produce the same output for identical calls_, therefore, *they must be virtual functions.*
+
+###### (This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)
+
+> [3] Delete (and deconstruct) both the Man and Woman objects.
+
+
+
+
