@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 22:04:04 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 22:05:25 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
 <h4 id="_challenge_description">Challenge Description:</h4>
 <div class="quoteblock">
 <blockquote>
@@ -166,10 +166,20 @@ call rax</p>
 <p>This tells us some important information: We take a pointer to a pointer, add an offset, and call it.</p>
 </div>
 <div class="paragraph">
-<p>Thinking back to the description of Vtables above, We can start to piece together what is happening here.
-1. <strong>local_18h</strong> is the start of the Vtable for this object
-2. <strong>The second entry</strong> of the vtable (+0x8) is the method we are calling.
-3. looking to the second <strong>call instruction</strong>, we can see that it uses a <strong>the very next address</strong> as it&#8217;s vtable pointer, and <strong>the exact same 0x8 offset</strong>.</p>
+<p>Thinking back to the description of Vtables above, We can start to piece together what is happening here.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>local_18h</strong> is the start of the Vtable for this object</p>
+</li>
+<li>
+<p><strong>The second entry</strong> of the vtable (+0x8) is the method we are calling.</p>
+</li>
+<li>
+<p>looking to the second <strong>call instruction</strong>, we can see that it uses a <strong>the very next address</strong> as it&#8217;s vtable pointer, and <strong>the exact same 0x8 offset</strong>.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>The sharp-eyed reader may notice that i said <em>the first member of a class instance is a Vtable pointer</em>, but the second Vtable pointer is immediately after the first. What gives?</p>

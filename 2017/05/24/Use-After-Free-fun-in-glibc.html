@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496095444701" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496095525718" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -255,10 +255,20 @@ call rax</p>
 <p>This tells us some important information: We take a pointer to a pointer, add an offset, and call it.</p>
 </div>
 <div class="paragraph">
-<p>Thinking back to the description of Vtables above, We can start to piece together what is happening here.
-1. <strong>local_18h</strong> is the start of the Vtable for this object
-2. <strong>The second entry</strong> of the vtable (+0x8) is the method we are calling.
-3. looking to the second <strong>call instruction</strong>, we can see that it uses a <strong>the very next address</strong> as it&#8217;s vtable pointer, and <strong>the exact same 0x8 offset</strong>.</p>
+<p>Thinking back to the description of Vtables above, We can start to piece together what is happening here.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>local_18h</strong> is the start of the Vtable for this object</p>
+</li>
+<li>
+<p><strong>The second entry</strong> of the vtable (+0x8) is the method we are calling.</p>
+</li>
+<li>
+<p>looking to the second <strong>call instruction</strong>, we can see that it uses a <strong>the very next address</strong> as it&#8217;s vtable pointer, and <strong>the exact same 0x8 offset</strong>.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>The sharp-eyed reader may notice that i said <em>the first member of a class instance is a Vtable pointer</em>, but the second Vtable pointer is immediately after the first. What gives?</p>
@@ -370,8 +380,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496095444701"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496095444701"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496095525718"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496095525718"></script>
 
 </body>
 </html>
