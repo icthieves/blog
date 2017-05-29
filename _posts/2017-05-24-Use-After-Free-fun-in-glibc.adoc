@@ -48,6 +48,7 @@ image::/images/blog/uaf/segfault.png["Segfault by accessing a dangling pointer."
 So, it's clearly possible to _use_ our pointers _after they are free'd_, but what weirdness can we cause with this?
 Well, this is where you would start googling "use after free", and eventually you might find link:https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/[this extremely good article on glibc's malloc() internals], and link:https://sourceware.org/glibc/wiki/MallocInternals[this very handy reference for glibc malloc()].
 
+#### Analysis
 
 After reading the articles linked above, you might start to see how a Use-After-Free vulnerability can be exploited. Because it is extremely expensive for a process to allocate memory through syscalls like *sbrk()* and *mmap()*, glibc *malloc()* avoids this as much as possible by maintaining sorted "bins" of unallocated memory.
 
@@ -113,6 +114,8 @@ Well, Nowhere in the program do we edit these values; Once the class is construc
 As such, the only actual "member" of these classes are their Vtable pointers, everything else is stored globally.
 
 Now, thinking back to the offsets used for the Vtable pointer: We know that the Vtables of related classes *must have the same ordering*, so *local_18h+0x8* and *local_20h+0x8* must be different implementations of the same function (in this case, *introduce()*). But if *introduce()* is the second method in both these classes, What is the first? What is *local_18h*?
+
+#### Exploitation
 
 One last time, let's go back to the source code, this time looking at the *Human* class.
 
