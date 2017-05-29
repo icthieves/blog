@@ -77,14 +77,22 @@ Here is a radare2 control flow graph of the *uaf* binary. notice the block at *0
 And, indeed, we can see two *call* instructions, with nearly identical arguments.
 
 Let's go over this segment byte by byte:
+
 > mov rax, qword [local_18h]
+
 This instruction loads a value at address *local_18h* to rax.
+
 > mov rax, qword [rax]
+
 This is telling. We're _dereferencing_ the value we just stored. clearly, *local_18h* must be a pointer to something.
+
 > add rax,8 
+
 now we add an offset of 8 bytes.
+
 > mov rax, qword [rax]
 > call rax
+
 And we _dereference the register again and call it!_
 
 This tells us some important information: We take a pointer to a pointer, add an offset, and call it.
