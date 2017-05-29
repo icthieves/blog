@@ -98,6 +98,7 @@ And we _dereference the register again and call it!_
 This tells us some important information: We take a pointer to a pointer, add an offset, and call it.
 
 Thinking back to the description of Vtables above, We can start to piece together what is happening here.
+
 1. *local_18h* is the start of the Vtable for this object
 2. *The second entry* of the vtable (+0x8) is the method we are calling.
 3. looking to the second *call instruction*, we can see that it uses a *the very next address* as it's vtable pointer, and *the exact same 0x8 offset*.
