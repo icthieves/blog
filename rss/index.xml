@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Thu, 25 May 2017 19:55:37 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 21:54:22 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
 <h4 id="_challenge_description">Challenge Description:</h4>
 <div class="quoteblock">
 <blockquote>
@@ -84,5 +84,91 @@ Well, this is where you would start googling "use after free", and eventually yo
 <div class="paragraph">
 <p>When <strong>malloc()</strong> is called, It first uses a best-fit algorithm and searches through it&#8217;s binlists for the first free chunk of adequate size. If one is found, It resizes the chunk (if necessary) and returns a pointer to the start of the chunk&#8217;s data section.
 That means if we <strong>free()</strong> and object, then <em>allocate something of the same size</em>, there is a 99% chance that we will get a pointer to <strong>exact same chunk that we just free&#8217;d.</strong></p>
+</div>
+<div class="paragraph">
+<p>But how can this be exploited?
+Well, We know we can call a function from  the <strong>Man</strong> and <strong>Woman</strong> classes after they are free&#8217;d and we know that we can potentially write arbitrary data to the chunk their dangling pointers refer to.
+The key insight to exploiting this, is abusing C++'s <em>Vtables</em></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/vtables.png" alt="Vtable memory block">
+</div>
+</div>
+<div class="paragraph">
+<p><a href="http://www.fuzzysecurity.com/tutorials/expDev/11.html">Image Source</a></p>
+</div>
+<div class="paragraph">
+<p>C++ polymorphism requires some compiler trickery to work properly. For example, if i have an instance of <strong>Man</strong> and i cast it to <strong>Human</strong>, what happens when i call <strong>introduce()</strong>?
+We would expect <strong>Man&#8594;introduce()</strong> to be invoked, and indeed this is what happens. But how did we know (given a <strong>Human</strong> pointer, which was the "real" function to call?</p>
+</div>
+<div class="paragraph">
+<p>This is where <em>Vtables</em> come in, and while the specifics vary between compilers (the standard specifies the language, not the implementation) we&#8217;ll cover the general idea.
+Every class instance in a C++ program has a <em>Vtable</em>, which is included <strong>as the first member of the object</strong>. This table is an ordered list of function pointers that point to the methods of this particular class in the class heirarchy. If a class inherits a method, then its Vtable entry for that method will be the same pointer as its parent (to prevent repeating an identical method).</p>
+</div>
+<div class="paragraph">
+<p>Because an object&#8217;s type may not be known until runtime, the vtables for related classes <strong>must be in the same order</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/call-introduce.png" alt="Disassembly of the switch block">
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a radare2 control flow graph of the <strong>uaf</strong> binary. notice the block at <strong>0x13ab</strong>. We know from analyzing the cmp instructions to get here that this must be the block that calls <strong>Man&#8594;introduce()</strong> and <strong>Women&#8594;introduce()</strong>.
+And, indeed, we can see two <strong>call</strong> instructions, with nearly identical arguments.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s go over this segment byte by byte:
+&gt; mov rax, qword [local_18h]
+This instruction loads a value at address <strong>local_18h</strong> to rax.
+&gt; mov rax, qword [rax]
+This is telling. We&#8217;re <em>dereferencing</em> the value we just stored. clearly, <strong>local_18h</strong> must be a pointer to something.
+&gt; add rax,8
+now we add an offset of 8 bytes.
+&gt; mov rax, qword [rax]
+&gt; call rax
+And we <em>dereference the register again and call it!</em></p>
+</div>
+<div class="paragraph">
+<p>This tells us some important information: We take a pointer to a pointer, add an offset, and call it.</p>
+</div>
+<div class="paragraph">
+<p>Thinking back to the description of Vtables above, We can start to piece together what is happening here.
+1. <strong>local_18h</strong> is the start of the Vtable for this object
+2. <strong>The second entry</strong> of the vtable (+0x8) is the method we are calling.
+3. looking to the second <strong>call instruction</strong>, we can see that it uses a <strong>the very next address</strong> as it&#8217;s vtable pointer, and <strong>the exact same 0x8 offset</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The sharp-eyed reader may notice that i said <em>the first member of a class instance is a Vtable pointer</em>, but the second Vtable pointer is immediately after the first. What gives?</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/class-members.png" alt="Class Definitions">
+</div>
+</div>
+<div class="paragraph">
+<p>Looking back at the source, we can indeed see that the <strong>Man</strong> and <strong>Woman</strong> subclasses inherit other members (a string and an int). Where are they, then?</p>
+</div>
+<div class="paragraph">
+<p>Well, Nowhere in the program do we edit these values; Once the class is constructed, they are fixed. The compiler likely placed these variables in a different segment, along with the program&#8217;s global variables.
+As such, the only actual "member" of these classes are their Vtable pointers, everything else is stored globally.</p>
+</div>
+<div class="paragraph">
+<p>Now, thinking back to the offsets used for the Vtable pointer: We know that the Vtables of related classes <strong>must have the same ordering</strong>, so <strong>local_18h+0x8</strong> and <strong>local_20h+0x8</strong> must be different implementations of the same function (in this case, <strong>introduce()</strong>). But if <strong>introduce()</strong> is the second method in both these classes, What is the first? What is <strong>local_18h</strong>?</p>
+</div>
+<div class="paragraph">
+<p>One last time, let&#8217;s go back to the source code, this time looking at the <strong>Human</strong> class.</p>
+</div>
+<div class="paragraph">
+<p>We can see that there is indeed a method defined before <strong>introduce()</strong>, which is <strong>give_shell()</strong>. Now all the pieces snap into place. Since <strong>Man</strong> and <strong>Woman</strong> are derived classes of <strong>Human</strong>, they <strong>inherit the give_shell() function!</strong>
+Since this is very first method defined in the class heirarchy, this must be the first method in the vtable, <strong>local_18h</strong> and <strong>local_20h</strong> (remember, inherited methods will point to the same function.)</p>
+</div>
+<div class="paragraph">
+<p><strong>All we need to do to call give_shell() instead of introduce(), is subtract 0x8 from the vtable entry for introduce(), and allocate it to the free&#8217;d chunk.</strong> Then, when we call <strong>Man&#8594;introduce()</strong>, it&#8217;ll call the method before it in the vtable (0x8-0x8=0, the first method of the class).</p>
+</div>
+<div class="paragraph">
+<p>Great! we&#8217;ve solved the logic of the challenge <em>without even needing to run the program.</em>
+To get our final address, we just need to debug the program, and break on the <strong>call</strong> to <strong>introduce()</strong>. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option <strong>2</strong>, should effectively confuse the program into calling <strong>give_shell()</strong> instead of <strong>introduce()</strong>.</p>
 </div>
 </div>]]></description><link>https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html</link><guid isPermaLink="true">https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html</guid><category><![CDATA[use-after-free]]></category><category><![CDATA[pwnable.kr]]></category><category><![CDATA[ctf]]></category><category><![CDATA[writeups]]></category><pubDate>Wed, 24 May 2017 00:00:00 GMT</pubDate></item></channel></rss>
