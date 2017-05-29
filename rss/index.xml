@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 21:55:53 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 22:01:48 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
 <h4 id="_challenge_description">Challenge Description:</h4>
 <div class="quoteblock">
 <blockquote>
@@ -170,5 +170,9 @@ Since this is very first method defined in the class heirarchy, this must be the
 <div class="paragraph">
 <p>Great! we&#8217;ve solved the logic of the challenge <em>without even needing to run the program.</em>
 To get our final address, we just need to debug the program, and break on the <strong>call</strong> to <strong>introduce()</strong>. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option <strong>2</strong>, should effectively confuse the program into calling <strong>give_shell()</strong> instead of <strong>introduce()</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The rest is just tying everything together.
+(Pwnable.kr is down at the time of writing, So expect a bow to be put on this article in a day or two.)</p>
 </div>
 </div>]]></description><link>https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html</link><guid isPermaLink="true">https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html</guid><category><![CDATA[use-after-free]]></category><category><![CDATA[pwnable.kr]]></category><category><![CDATA[ctf]]></category><category><![CDATA[writeups]]></category><pubDate>Wed, 24 May 2017 00:00:00 GMT</pubDate></item></channel></rss>

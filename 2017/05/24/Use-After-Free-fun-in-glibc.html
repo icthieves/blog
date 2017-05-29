@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496094953099" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496095308257" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -260,6 +260,10 @@ Since this is very first method defined in the class heirarchy, this must be the
 <p>Great! we&#8217;ve solved the logic of the challenge <em>without even needing to run the program.</em>
 To get our final address, we just need to debug the program, and break on the <strong>call</strong> to <strong>introduce()</strong>. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option <strong>2</strong>, should effectively confuse the program into calling <strong>give_shell()</strong> instead of <strong>introduce()</strong>.</p>
 </div>
+<div class="paragraph">
+<p>The rest is just tying everything together.
+(Pwnable.kr is down at the time of writing, So expect a bow to be put on this article in a day or two.)</p>
+</div>
 </div>
         </section>
 
@@ -334,8 +338,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496094953099"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496094953099"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496095308257"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496095308257"></script>
 
 </body>
 </html>
