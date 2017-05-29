@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496095719760" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496096130924" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -21,7 +21,7 @@
     <meta property="og:site_name" content="Infosec/CTF Notes" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Pwnable.kr - UAF Writeup" />
-    <meta property="og:description" content="Challenge Description: Mommy, what is Use After Free bug? ssh uaf@pwnable.kr -p2222 (pw:guest) First Impressions: Here we find the usual readable source code, executable binary, and unreadable flag. Looking at the source code we see that it defines a simple virtual class (Human) and its two subclasses" />
+    <meta property="og:description" content="Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices and error, please let me know. I don&amp;#8217;t know what i don&amp;#8217;t know, and i sure don&amp;" />
     <meta property="og:url" content="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
     <meta property="og:image" content="/images/covers/space.jpg" />
     <meta property="article:published_time" content="2017-05-24T00:00:00.000Z" />
@@ -32,7 +32,7 @@
     
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Pwnable.kr - UAF Writeup" />
-    <meta name="twitter:description" content="Challenge Description: Mommy, what is Use After Free bug? ssh uaf@pwnable.kr -p2222 (pw:guest) First Impressions: Here we find the usual readable source code, executable binary, and unreadable flag. Looking at the source code we see that it defines a simple virtual class (Human) and its two subclasses" />
+    <meta name="twitter:description" content="Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices and error, please let me know. I don&amp;#8217;t know what i don&amp;#8217;t know, and i sure don&amp;" />
     <meta name="twitter:url" content="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
     <meta name="twitter:image:src" content="/images/covers/space.jpg" />
     
@@ -53,7 +53,7 @@
     "datePublished": "2017-05-24T00:00:00.000Z",
     "image": "/images/covers/space.jpg",
     "keywords": "use-after-free, pwnable.kr, ctf, writeups",
-    "description": "Challenge Description: Mommy, what is Use After Free bug? ssh uaf@pwnable.kr -p2222 (pw:guest) First Impressions: Here we find the usual readable source code, executable binary, and unreadable flag. Looking at the source code we see that it defines a simple virtual class (Human) and its two subclasses"
+    "description": "Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices and error, please let me know. I don&amp;#8217;t know what i don&amp;#8217;t know, and i sure don&amp;"
 }
     </script>
 
@@ -87,7 +87,14 @@
         </header>
 
         <section class="post-content">
-            <div class="sect3">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices and error, please let me know. I don&#8217;t know what i don&#8217;t know, and i sure don&#8217;t know a lot.</em></p>
+</div>
+</div>
+</div>
+<div class="sect3">
 <h4 id="_challenge_description">Challenge Description:</h4>
 <div class="quoteblock">
 <blockquote>
@@ -386,8 +393,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496095719760"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496095719760"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496096130924"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496096130924"></script>
 
 </body>
 </html>
