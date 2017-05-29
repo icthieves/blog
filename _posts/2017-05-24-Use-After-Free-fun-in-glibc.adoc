@@ -115,6 +115,8 @@ Since this is very first method defined in the class heirarchy, this must be the
 Great! we've solved the logic of the challenge _without even needing to run the program._
 To get our final address, we just need to debug the program, and break on the *call* to *introduce()*. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option *2*, should effectively confuse the program into calling *give_shell()* instead of *introduce()*.
 
+The rest is just tying everything together.
+(Pwnable.kr is down at the time of writing, So expect a bow to be put on this article in a day or two.)
 
 
 
