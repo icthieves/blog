@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 22:01:48 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 22:04:04 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
 <h4 id="_challenge_description">Challenge Description:</h4>
 <div class="quoteblock">
 <blockquote>
@@ -119,16 +119,48 @@ Every class instance in a C++ program has a <em>Vtable</em>, which is included <
 And, indeed, we can see two <strong>call</strong> instructions, with nearly identical arguments.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s go over this segment byte by byte:
-&gt; mov rax, qword [local_18h]
-This instruction loads a value at address <strong>local_18h</strong> to rax.
-&gt; mov rax, qword [rax]
-This is telling. We&#8217;re <em>dereferencing</em> the value we just stored. clearly, <strong>local_18h</strong> must be a pointer to something.
-&gt; add rax,8
-now we add an offset of 8 bytes.
-&gt; mov rax, qword [rax]
-&gt; call rax
-And we <em>dereference the register again and call it!</em></p>
+<p>Let&#8217;s go over this segment byte by byte:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>mov rax, qword [local_18h]</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>This instruction loads a value at address <strong>local_18h</strong> to rax.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>mov rax, qword [rax]</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>This is telling. We&#8217;re <em>dereferencing</em> the value we just stored. clearly, <strong>local_18h</strong> must be a pointer to something.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>add rax,8</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>now we add an offset of 8 bytes.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>mov rax, qword [rax]
+call rax</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>And we <em>dereference the register again and call it!</em></p>
 </div>
 <div class="paragraph">
 <p>This tells us some important information: We take a pointer to a pointer, add an offset, and call it.</p>
