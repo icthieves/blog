@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 22:05:25 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Mon, 29 May 2017 22:08:39 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div class="sect3">
 <h4 id="_challenge_description">Challenge Description:</h4>
 <div class="quoteblock">
 <blockquote>
@@ -78,6 +78,9 @@ Notice that the class contains two <em>virtual functions</em>, only one of which
 <p>So, it&#8217;s clearly possible to <em>use</em> our pointers <em>after they are free&#8217;d</em>, but what weirdness can we cause with this?
 Well, this is where you would start googling "use after free", and eventually you might find <a href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">this extremely good article on glibc&#8217;s malloc() internals</a>, and <a href="https://sourceware.org/glibc/wiki/MallocInternals">this very handy reference for glibc malloc()</a>.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_analysis">Analysis</h4>
 <div class="paragraph">
 <p>After reading the articles linked above, you might start to see how a Use-After-Free vulnerability can be exploited. Because it is extremely expensive for a process to allocate memory through syscalls like <strong>sbrk()</strong> and <strong>mmap()</strong>, glibc <strong>malloc()</strong> avoids this as much as possible by maintaining sorted "bins" of unallocated memory.</p>
 </div>
@@ -199,6 +202,9 @@ As such, the only actual "member" of these classes are their Vtable pointers, ev
 <div class="paragraph">
 <p>Now, thinking back to the offsets used for the Vtable pointer: We know that the Vtables of related classes <strong>must have the same ordering</strong>, so <strong>local_18h+0x8</strong> and <strong>local_20h+0x8</strong> must be different implementations of the same function (in this case, <strong>introduce()</strong>). But if <strong>introduce()</strong> is the second method in both these classes, What is the first? What is <strong>local_18h</strong>?</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_exploitation">Exploitation</h4>
 <div class="paragraph">
 <p>One last time, let&#8217;s go back to the source code, this time looking at the <strong>Human</strong> class.</p>
 </div>
