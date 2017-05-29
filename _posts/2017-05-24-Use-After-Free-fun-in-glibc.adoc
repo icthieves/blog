@@ -5,6 +5,8 @@
 :hp-tags: use-after-free, pwnable.kr, ctf, writeups
 :hp-alt-title: Use-After-Free fun in glibc!
 
+_Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices and error, please let me know. I don't know what i don't know, and i sure don't know a lot._
+
 #### Challenge Description: 
 > Mommy, what is Use After Free bug?
 > ssh uaf@pwnable.kr -p2222 (pw:guest)
