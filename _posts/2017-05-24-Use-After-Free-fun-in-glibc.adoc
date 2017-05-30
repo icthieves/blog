@@ -123,7 +123,46 @@ Great! we've solved the logic of the challenge _without even needing to run the 
 To get our final address, we just need to debug the program, and break on the *call* to *introduce()*. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option *2*, should effectively confuse the program into calling *give_shell()* instead of *introduce()*.
 
 The rest is just tying everything together.
-(Pwnable.kr is down at the time of writing, So expect a bow to be put on this article in a day or two.)
+
+#### Execution
+
+Let's log back into pwnable.kr and gather the last bit of information we need, the address of the *Man()* vtable.
+
+We load up the *uaf* binary in radare and debug it.
+disassemble *main()* and find the start of the block that calls *introduce()* 
+
+> s sym.main
+
+> pdf
+
+(this can also be done visually with _VV_ instead of _pdf_, but i thought i'd show some other viewing modes.)
+
+image::/images/blog/uaf/breakpoint.png
+
+here we can see that the start of the block is at *0x400FCD*.
+We'll set this as our next breakpoint and continue.
+
+> db 0x400fcd
+
+> dc
+
+Now let's step through the code and look at the registers.
+We know from our static analysis that the address to *introduce()* will be in *RAX* at the call instruction.
+
+image::/images/blog/uaf/introduce-addr.png["Finally, the address of the introduce method"]
+
+Notice that i have stopped execution at *0x400fd8*, (marked in blue with *RIP*), this is immediately after the offset is added, so *RAX* must now contain the *Vtable entry for introduce()*
+
+We can see from the debug registers that *RAX* is *0x401578*.
+This is the *address* of the Vtable entry for *introduce()* (the currently marked instruction, mov rdx, [rax] has not been processed yet.)
+We had to add an offset of *0x8* to get here, so to get the first method in the Vtable we should *subtract 0x10*.
+
+Now, all we have to do is write this value _in little endian format_ to a file, pad it to 24 bytes, and allocate it twice in *uaf* after freeing the objects.
+
+image::/images/blog/uaf/pwned.png
+
+And finally, we've can read the flag.
+
 
 
 
