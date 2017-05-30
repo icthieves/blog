@@ -159,7 +159,7 @@ We had to add an offset of *0x8* to get here, so to get the first method in the 
 
 Now, all we have to do is write this value _in little endian format_ to a file, pad it to 24 bytes, and allocate it twice in *uaf* after freeing the objects.
 
-image::/images/blog/uaf/pwned.png
+image::/images/blog/uaf/pwned.png["Victory!"]
 
 And finally, we've can read the flag.
 
