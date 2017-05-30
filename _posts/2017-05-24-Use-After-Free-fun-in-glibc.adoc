@@ -5,7 +5,7 @@
 :hp-tags: use-after-free, pwnable.kr, ctf, writeups
 :hp-alt-title: Use-After-Free fun in glibc!
 
-_Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices and error, please let me know. I don't know what i don't know, and i sure don't know a lot._
+_Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices an error, please let me know. I don't know what i don't know, and i sure don't know a lot._
 
 #### Challenge Description: 
 > Mommy, what is Use After Free bug?
@@ -26,7 +26,7 @@ We are prompted with three options:
 
 > [1] Call the *introduce()* method of both the Man and Woman objects.
 
-Notice that both the Man* and Woman* from the *new* keyword are cast to *Human**. Clearly, this objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), _A function with the same prototype, using two upcasted objects._ Either we are calling the *introduce()* method of the Human class, or there's some as yet unseen polymorphism mechanism that de-obfuscates our function call. Running the code, you can see that *Man->introduce()* and *Woman->introduce()* _do not produce the same output for identical calls_, therefore, *they must be virtual functions.*
+Notice that both the Man* and Woman* from the *new* keyword are cast to *Human**. Clearly, this objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), _A function with the same prototype, using two upcasted objects._ Either we are calling the *introduce()* method of the Human class, or there's some as yet unseen polymorphism mechanism that deobfuscates our function call. Running the code, you can see that *Man->introduce()* and *Woman->introduce()* _do not produce the same output for identical calls_, therefore, *they must be virtual functions.*
 
 (This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)
 
@@ -54,7 +54,7 @@ Well, this is where you would start googling "use after free", and eventually yo
 
 After reading the articles linked above, you might start to see how a Use-After-Free vulnerability can be exploited. Because it is extremely expensive for a process to allocate memory through syscalls like *sbrk()* and *mmap()*, glibc *malloc()* avoids this as much as possible by maintaining sorted "bins" of unallocated memory.
 
-When *malloc()* is called, It first uses a best-fit algorithm and searches through it's binlists for the first free chunk of adequate size. If one is found, It resizes the chunk (if necessary) and returns a pointer to the start of the chunk's data section.
+When *malloc()* is called, It searches through its binlists for the first free chunk of adequate size. If one is found, It resizes the chunk (if necessary) and returns a pointer to the start of the chunk's data section.
 That means if we *free()* and object, then _allocate something of the same size_, there is a 99% chance that we will get a pointer to *exact same chunk that we just free'd.*
 
 But how can this be exploited?
@@ -103,23 +103,16 @@ This tells us some important information: We take a pointer to a pointer, add an
 Thinking back to the description of Vtables above, We can start to piece together what is happening here.
 
 1. *local_18h* is the start of the Vtable for this object
-2. *The second entry* of the vtable (+0x8) is the method we are calling.
-3. looking to the second *call instruction*, we can see that it uses a *the very next address* as it's vtable pointer, and *the exact same 0x8 offset*.
-
-The sharp-eyed reader may notice that i said _the first member of a class instance is a Vtable pointer_, but the second Vtable pointer is immediately after the first. What gives?
-
-image::/images/blog/uaf/class-members.png["Class Definitions"]
-
-Looking back at the source, we can indeed see that the *Man* and *Woman* subclasses inherit other members (a string and an int). Where are they, then?
-
-Well, Nowhere in the program do we edit these values; Once the class is constructed, they are fixed. The compiler likely placed these variables in a different segment, along with the program's global variables.
-As such, the only actual "member" of these classes are their Vtable pointers, everything else is stored globally.
+2. *The second entry* of the vtable (local_18h+0x8) is the method we are calling.
+3. looking to the second *call instruction*, we can see that it uses a *the very next address* as its vtable pointer, and *the exact same 0x8 offset*.
 
 Now, thinking back to the offsets used for the Vtable pointer: We know that the Vtables of related classes *must have the same ordering*, so *local_18h+0x8* and *local_20h+0x8* must be different implementations of the same function (in this case, *introduce()*). But if *introduce()* is the second method in both these classes, What is the first? What is *local_18h*?
 
 #### Exploitation
 
 One last time, let's go back to the source code, this time looking at the *Human* class.
+
+image::/images/blog/uaf/human.png["Human class"]
 
 We can see that there is indeed a method defined before *introduce()*, which is *give_shell()*. Now all the pieces snap into place. Since *Man* and *Woman* are derived classes of *Human*, they *inherit the give_shell() function!*
 Since this is very first method defined in the class heirarchy, this must be the first method in the vtable, *local_18h* and *local_20h* (remember, inherited methods will point to the same function.)
