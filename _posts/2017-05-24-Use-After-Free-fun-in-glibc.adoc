@@ -104,7 +104,7 @@ Thinking back to the description of Vtables above, We can start to piece togethe
 
 1. *local_18h* is the start of the Vtable for this object
 2. *The second entry* of the vtable (local_18h+0x8) is the method we are calling.
-3. looking to the second *call instruction*, we can see that it uses a *the very next address* as its vtable pointer, and *the exact same 0x8 offset*.
+3. looking to the second *call instruction*, we can see that it uses the very next address as its vtable pointer, and *the exact same 0x8 offset*.
 
 Now, thinking back to the offsets used for the Vtable pointer: We know that the Vtables of related classes *must have the same ordering*, so *local_18h+0x8* and *local_20h+0x8* must be different implementations of the same function (in this case, *introduce()*). But if *introduce()* is the second method in both these classes, What is the first? What is *local_18h*?
 
