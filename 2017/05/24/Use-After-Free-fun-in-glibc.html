@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496127820379" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496127929359" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -299,7 +299,7 @@ call rax</p>
 Since this is very first method defined in the class heirarchy, this must be the first method in the vtable, <strong>local_18h</strong> and <strong>local_20h</strong> (remember, inherited methods will point to the same function.)</p>
 </div>
 <div class="paragraph">
-<p><strong>All we need to do to call give_shell() instead of introduce(), is subtract 0x8 from the vtable entry for introduce(), and allocate it to the free&#8217;d chunk.</strong> Then, when we call <strong>Man&#8594;introduce()</strong>, it&#8217;ll call the method before it in the vtable (0x8-0x8=0, the first method of the class).</p>
+<p><strong>All we need to do to call give_shell() instead of introduce(), is subtract 0x8 from the vtable entry for introduce(), and allocate it to the free&#8217;d chunk.</strong> Then, when we call <strong>Man&#8594;introduce()</strong>, it&#8217;ll call the method before it in the vtable.</p>
 </div>
 <div class="paragraph">
 <p>Great! we&#8217;ve solved the logic of the challenge <em>without even needing to run the program.</em>
@@ -383,8 +383,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496127820379"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496127820379"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496127929359"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496127929359"></script>
 
 </body>
 </html>
