@@ -117,7 +117,7 @@ image::/images/blog/uaf/human.png["Human class"]
 We can see that there is indeed a method defined before *introduce()*, which is *give_shell()*. Now all the pieces snap into place. Since *Man* and *Woman* are derived classes of *Human*, they *inherit the give_shell() function!*
 Since this is very first method defined in the class heirarchy, this must be the first method in the vtable, *local_18h* and *local_20h* (remember, inherited methods will point to the same function.)
 
-*All we need to do to call give_shell() instead of introduce(), is subtract 0x8 from the vtable entry for introduce(), and allocate it to the free'd chunk.* Then, when we call *Man->introduce()*, it'll call the method before it in the vtable (0x8-0x8=0, the first method of the class).
+*All we need to do to call give_shell() instead of introduce(), is subtract 0x8 from the vtable entry for introduce(), and allocate it to the free'd chunk.* Then, when we call *Man->introduce()*, it'll call the method before it in the vtable.
 
 Great! we've solved the logic of the challenge _without even needing to run the program._
 To get our final address, we just need to debug the program, and break on the *call* to *introduce()*. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option *2*, should effectively confuse the program into calling *give_shell()* instead of *introduce()*.
