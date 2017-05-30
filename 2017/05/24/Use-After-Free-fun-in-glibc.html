@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496175302750" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496175897002" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -135,7 +135,7 @@ We are prompted with three options:</p>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>Notice that both the Man* and Woman* from the <strong>new</strong> keyword are cast to <strong>Human</strong>*. Clearly, this objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), <em>A function with the same prototype, using two upcasted objects.</em> Either we are calling the <strong>introduce()</strong> method of the Human class, or there&#8217;s some as yet unseen polymorphism mechanism that deobfuscates our function call. Running the code, you can see that <strong>Man&#8594;introduce()</strong> and <strong>Woman&#8594;introduce()</strong> <em>do not produce the same output for identical calls</em>, therefore, <strong>they must be virtual functions.</strong></p>
+<p>Notice that both the Man* and Woman* from the <strong>new</strong> keyword are cast to <strong>Human</strong>*. Clearly, these objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), <em>A function with the same prototype, using two upcasted objects.</em> Either we are calling the <strong>introduce()</strong> method of the Human class, or there&#8217;s some as yet unseen polymorphism mechanism that deobfuscates our function call. Running the code, you can see that <strong>Man&#8594;introduce()</strong> and <strong>Woman&#8594;introduce()</strong> <em>do not produce the same output for identical calls</em>, therefore, <strong>they must be virtual functions.</strong></p>
 </div>
 <div class="paragraph">
 <p>(This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)</p>
@@ -458,8 +458,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496175302750"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496175302750"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496175897002"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496175897002"></script>
 
 </body>
 </html>
