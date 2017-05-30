@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496127929359" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496175182342" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -306,8 +306,81 @@ Since this is very first method defined in the class heirarchy, this must be the
 To get our final address, we just need to debug the program, and break on the <strong>call</strong> to <strong>introduce()</strong>. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option <strong>2</strong>, should effectively confuse the program into calling <strong>give_shell()</strong> instead of <strong>introduce()</strong>.</p>
 </div>
 <div class="paragraph">
-<p>The rest is just tying everything together.
-(Pwnable.kr is down at the time of writing, So expect a bow to be put on this article in a day or two.)</p>
+<p>The rest is just tying everything together.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_execution">Execution</h4>
+<div class="paragraph">
+<p>Let&#8217;s log back into pwnable.kr and gather the last bit of information we need, the address of the <strong>Man()</strong> vtable.</p>
+</div>
+<div class="paragraph">
+<p>We load up the <strong>uaf</strong> binary in radare and debug it.
+disassemble <strong>main()</strong> and find the start of the block that calls <strong>introduce()</strong></p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>s sym.main</p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>pdf</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>(this can also be done visually with <em>VV</em> instead of <em>pdf</em>, but i thought i&#8217;d show some other viewing modes.)</p>
+</div>
+<div class="paragraph">
+<p>image::/images/blog/uaf/breakpoint.png</p>
+</div>
+<div class="paragraph">
+<p>here we can see that the start of the block is at <strong>0x400FCD</strong>.
+We&#8217;ll set this as our next breakpoint and continue.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>db 0x400fcd</p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>dc</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s step through the code and look at the registers.
+We know from our static analysis that the address to <strong>introduce()</strong> will be in <strong>RAX</strong> at the call instruction.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/introduce-addr.png" alt="Finally, the address of the introduce method">
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that i have stopped execution at <strong>0x400fd8</strong>, (marked in blue with <strong>RIP</strong>), this is immediately after the offset is added, so <strong>RAX</strong> must now contain the <strong>Vtable entry for introduce()</strong></p>
+</div>
+<div class="paragraph">
+<p>We can see from the debug registers that <strong>RAX</strong> is <strong>0x401578</strong>.
+This is the <strong>address</strong> of the Vtable entry for <strong>introduce()</strong> (the currently marked instruction, mov rdx, [rax] has not been processed yet.)
+We had to add an offset of <strong>0x8</strong> to get here, so to get the first method in the Vtable we should <strong>subtract 0x10</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Now, all we have to do is write this value <em>in little endian format</em> to a file, pad it to 24 bytes, and allocate it twice in <strong>uaf</strong> after freeing the objects.</p>
+</div>
+<div class="paragraph">
+<p>image::/images/blog/uaf/pwned.png</p>
+</div>
+<div class="paragraph">
+<p>And finally, we&#8217;ve can read the flag.</p>
 </div>
 </div>
         </section>
@@ -383,8 +456,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496127929359"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496127929359"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496175182342"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496175182342"></script>
 
 </body>
 </html>
