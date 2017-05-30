@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Tue, 30 May 2017 20:13:02 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div id="preamble">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Tue, 30 May 2017 20:15:02 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><em>Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices an error, please let me know. I don&#8217;t know what i don&#8217;t know, and i sure don&#8217;t know a lot.</em></p>
@@ -287,8 +287,10 @@ We had to add an offset of <strong>0x8</strong> to get here, so to get the first
 <div class="paragraph">
 <p>Now, all we have to do is write this value <em>in little endian format</em> to a file, pad it to 24 bytes, and allocate it twice in <strong>uaf</strong> after freeing the objects.</p>
 </div>
-<div class="paragraph">
-<p>image::/images/blog/uaf/pwned.png</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/pwned.png" alt="Victory!">
+</div>
 </div>
 <div class="paragraph">
 <p>And finally, we&#8217;ve can read the flag.</p>

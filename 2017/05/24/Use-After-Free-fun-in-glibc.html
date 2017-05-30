@@ -12,7 +12,7 @@
 
     <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496175182342" />
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496175302750" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
 
     <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
@@ -376,8 +376,10 @@ We had to add an offset of <strong>0x8</strong> to get here, so to get the first
 <div class="paragraph">
 <p>Now, all we have to do is write this value <em>in little endian format</em> to a file, pad it to 24 bytes, and allocate it twice in <strong>uaf</strong> after freeing the objects.</p>
 </div>
-<div class="paragraph">
-<p>image::/images/blog/uaf/pwned.png</p>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/pwned.png" alt="Victory!">
+</div>
 </div>
 <div class="paragraph">
 <p>And finally, we&#8217;ve can read the flag.</p>
@@ -456,8 +458,8 @@ Dork.</p>
        
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496175182342"></script>
-    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496175182342"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496175302750"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496175302750"></script>
 
 </body>
 </html>
