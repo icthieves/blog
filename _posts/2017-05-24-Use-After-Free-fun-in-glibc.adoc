@@ -161,7 +161,7 @@ Now, all we have to do is write this value _in little endian format_ to a file, 
 
 image::/images/blog/uaf/pwned.png["Victory!"]
 
-And finally, we've can read the flag.
+And finally, we can read the flag.
 
 
 
