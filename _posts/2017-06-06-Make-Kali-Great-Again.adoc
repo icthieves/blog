@@ -1,0 +1,59 @@
+= Living with Kali - Installing Chrome
+// See https://hubpress.gitbooks.io/hubpress-knowledgebase/content/ for information about the parameters.
+:hp-image: /covers/logo.png
+:published_at: 2017-06-06
+:hp-tags: kali, linux, convenience, chrome
+:hp-alt-title: Make Kali Great Again
+
+## Living with Kali: Installing the Chrome browser on Kali
+### How to ruin the Kali distribution by making it usable for day-to-day use
+
+__Disclaimer: Kali is meant to be secure, not convenient. The reader should note that messing with Kali as described in this article means to sacrifice some of that security. If, Like me, you don't use Kali in a professional capacity, then this is probably a fair trade.__
+
+I recently switch from Parrot to Kali, and the first thing i noticed was that Kali takes itself much more seriously. There's no Office suite, and the only browser in the Kali repos is Firefox ESR.
+
+I decided to make some minor adjustments to improve my quality of life.
+
+
+### Installing Chrome
+
+I'm sure half of you reading just recoiled in disgust. Allow me to defend myself:
+
+- It's fast
+- It's easier to set-up across all of my devices
+- I'm just a student. This machine isn't being held to the same security standards as someone who actually knows what they're doing.
+
+It's fairly straightforward.
+
+- link:https://www.google.ca/chrome/browser/features.html[Get Chrome]
+- install *gdebi*
+
+> apt-get install gdebi
+
+- install chrome
+
+
+> gdebi google-chrome-stable_current_amd64.deb
+
+- If you run Kali as __root__, Then chrome will complain that this is a horrible idea (spoiler: it is.) Fortunately, this is easy to remedy.
+
+First, We add a new user just for chrome
+
+> adduser chromeuser
+
+Then, we edit Chrome's launch script to run as that user
+
+> vim /opt/google/chrome/google-chrome
+
+Then, edit the __exec__ line near the bottom of the file and prepend a *sudo -u chromeuser * to it.
+
+image::/images/blog/livingwithkali/chrome.png["The edited Chrome script"]
+
+Now, whenever you launch chrome it'll run as an unpriviledged user.
+
+__Note: The other way to do this, if you absolutely must run Chrome as root, is to append --no-sandbox instead of sudo. Don't do this.__
+
+Now, install link:https://cryptup.org/[Cryptup] and link:https://lastpass.com/[lastpass] and your other preferred extensions.
+
+
+
