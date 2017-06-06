@@ -1,4 +1,117 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Tue, 06 Jun 2017 22:34:32 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div id="preamble">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Infosec/CTF Notes]]></title><description><![CDATA[Notes, Write-ups, and Stories from my studies]]></description><link>https://icthieves.github.io</link><image><url>/images/covers/space.jpg</url><title>Infosec/CTF Notes</title><link>https://icthieves.github.io</link></image><generator>RSS for Node</generator><lastBuildDate>Tue, 06 Jun 2017 22:38:18 GMT</lastBuildDate><atom:link href="https://icthieves.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Living with Kali - Installing Chrome]]></title><description><![CDATA[<div class="sect1">
+<h2 id="_living_with_kali_installing_the_chrome_browser_on_kali">Living with Kali: Installing the Chrome browser on Kali</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_how_to_ruin_the_kali_distribution_by_making_it_usable_for_day_to_day_use">How to ruin the Kali distribution by making it usable for day-to-day use</h3>
+<div class="paragraph">
+<p><em>Disclaimer: Kali is meant to be secure, not convenient. The reader should note that messing with Kali as described in this article means to sacrifice some of that security. If, Like me, you don&#8217;t use Kali in a professional capacity, then this is probably a fair trade.</em></p>
+</div>
+<div class="paragraph">
+<p>I recently switch from Parrot to Kali, and the first thing i noticed was that Kali takes itself much more seriously. There&#8217;s no Office suite, and the only browser in the Kali repos is Firefox ESR.</p>
+</div>
+<div class="paragraph">
+<p>I decided to make some minor adjustments to improve my quality of life.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_installing_chrome">Installing Chrome</h3>
+<div class="paragraph">
+<p>I&#8217;m sure half of you reading just recoiled in disgust. Allow me to defend myself:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It&#8217;s fast</p>
+</li>
+<li>
+<p>It&#8217;s easier to set-up across all of my devices</p>
+</li>
+<li>
+<p>I&#8217;m just a student. This machine isn&#8217;t being held to the same security standards as someone who actually knows what they&#8217;re doing.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It&#8217;s fairly straightforward.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.google.ca/chrome/browser/features.html">Get Chrome</a></p>
+</li>
+<li>
+<p>install <strong>gdebi</strong></p>
+</li>
+</ul>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>apt-get install gdebi</p>
+</div>
+</blockquote>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>install chrome</p>
+</li>
+</ul>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>gdebi google-chrome-stable_current_amd64.deb</p>
+</div>
+</blockquote>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you run Kali as <em>root</em>, Then chrome will complain that this is a horrible idea (spoiler: it is.) Fortunately, this is easy to remedy.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>First, We add a new user just for chrome</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>adduser chromeuser</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Then, we edit Chrome&#8217;s launch script to run as that user</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>vim /opt/google/chrome/google-chrome</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Then, edit the <em>exec</em> line near the bottom of the file and prepend a *sudo -u chromeuser * to it.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/livingwithkali/chrome.png" alt="The edited Chrome script">
+</div>
+</div>
+<div class="paragraph">
+<p>Now, whenever you launch chrome it&#8217;ll run as an unpriviledged user.</p>
+</div>
+<div class="paragraph">
+<p><em>Note: The other way to do this, if you absolutely must run Chrome as root, is to append --no-sandbox instead of sudo. Don&#8217;t do this.</em></p>
+</div>
+<div class="paragraph">
+<p>Now, install <a href="https://cryptup.org/">Cryptup</a> and <a href="https://lastpass.com/">lastpass</a> and your other preferred extensions.</p>
+</div>
+</div>
+</div>
+</div>]]></description><link>https://icthieves.github.io/2017/06/06/Make-Kali-Great-Again.html</link><guid isPermaLink="true">https://icthieves.github.io/2017/06/06/Make-Kali-Great-Again.html</guid><category><![CDATA[kali]]></category><category><![CDATA[linux]]></category><category><![CDATA[convenience]]></category><category><![CDATA[chrome]]></category><pubDate>Tue, 06 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Pwnable.kr - UAF Writeup]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><em>Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices an error, please let me know. I don&#8217;t know what i don&#8217;t know, and i sure don&#8217;t know a lot.</em></p>
