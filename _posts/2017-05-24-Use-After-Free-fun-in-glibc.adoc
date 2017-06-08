@@ -1,6 +1,6 @@
 = Pwnable.kr - UAF Writeup 
 //See https://hubpress.gitbooks.io/hubpress-knowledgebase content/ for information about the parameters.
-:hp-image: /covers/pwnable.png
+:hp-image: /images/covers/pwnable.png
 :published_at: 2017-05-24
 :hp-tags: use-after-free, pwnable.kr, ctf, writeups
 :hp-alt-title: Use-After-Free fun in glibc!
