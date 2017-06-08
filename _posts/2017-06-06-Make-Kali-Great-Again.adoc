@@ -5,7 +5,6 @@
 :hp-tags: kali, linux, convenience, chrome
 :hp-alt-title: Make Kali Great Again
 
-## Living with Kali: Installing the Chrome browser on Kali
 ### How to ruin the Kali distribution by making it usable for day-to-day use
 
 __Disclaimer: Kali is meant to be secure, not convenient. The reader should note that messing with Kali as described in this article means to sacrifice some of that security. If, Like me, you don't use Kali in a professional capacity, then this is probably a fair trade.__
