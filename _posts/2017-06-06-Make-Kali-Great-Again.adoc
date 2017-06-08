@@ -1,6 +1,6 @@
 = Living with Kali - Installing Chrome
 // See https://hubpress.gitbooks.io/hubpress-knowledgebase/content/ for information about the parameters.
-:hp-image: /blog/livingwithkali/logo.png
+:hp-image: /covers/chrome.png
 :published_at: 2017-06-06
 :hp-tags: kali, linux, convenience, chrome
 :hp-alt-title: Make Kali Great Again
