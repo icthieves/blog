@@ -41,15 +41,16 @@ First, We add a new user just for chrome
 
 > adduser chromeuser
 
-Then, we edit Chrome's launch script to run as that user
+Next, edit */usr/share/applications/google-chrome.desktop* and change every *Exec=* line by prepending *sudo -u chromeuser*. Now every time you launch chrome from dash2dock.
 
-> vim /opt/google/chrome/google-chrome
+You also need to give *xhost* permissions to chromeuser's applications, otherwise Chrome won't be able to connect to the xserver and can't spawn windows. I did this by editing my *~/.bashrc* file and adding the line:
 
-Then, edit the __exec__ line near the bottom of the file and prepend a *sudo -u chromeuser * to it.
+> xhost +SI:localuser:chromeuser
 
-image::/images/blog/livingwithkali/chrome.png["The edited Chrome script"]
+This will add __only chromeuser__ to the xserver ACL. This is probably safer than adding all local users with *xhost local:*. 
+you can check which users are authorized by running *xhost*.
 
-Now, whenever you launch chrome it'll run as an unpriviledged user.
+Now, whenever you launch chrome from dash2dock or the desktop it'll run as an unpriviledged user.
 
 __Note: The other way to do this, if you absolutely must run Chrome as root, is to append --no-sandbox instead of sudo. Don't do this.__
 
