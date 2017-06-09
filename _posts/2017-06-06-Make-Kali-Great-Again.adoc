@@ -40,7 +40,7 @@ First, We add a new user just for chrome
 
 > adduser chromeuser
 
-Next, edit */usr/share/applications/google-chrome.desktop* and change every *Exec=* line by prepending *sudo -u chromeuser*. Now every time you launch chrome from dash2dock.
+Next, edit */usr/share/applications/google-chrome.desktop* and change every *Exec=* line by prepending *sudo -u chromeuser*. Now every time you launch chrome from dash2dock it will be run as an unpriviledged user.
 
 You also need to give *xhost* permissions to chromeuser's applications, otherwise Chrome won't be able to connect to the xserver and can't spawn windows. I did this by editing my *~/.bashrc* file and adding the line:
 
