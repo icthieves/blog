@@ -1,9 +1,8 @@
 {
   "meta": {
     "username": "icthieves",
-    "repositoryName": "icthieves.github.io",
-    "branch": "gh-pages",
-    "cname": ""
+    "repositoryName": "blog",
+    "branch": "master"
   },
   "theme": {
     "name": "casper"
@@ -22,28 +21,7 @@
       null,
       null,
       null
-    ]
-  },
-  "site": {
-    "title": "Infosec/CTF Notes",
-    "description": "Notes, Write-ups, and Stories from my studies",
-    "logo": "",
-    "cover": "/images/covers/space.jpg",
-    "delay": "",
-    "postsPerPage": "",
-    "googleAnalytics": "",
-    "disqus": ""
-  },
-  "socialnetwork": {
-    "email": "",
-    "github": "",
-    "twitter": "",
-    "facebook": "",
-    "googleplus": "",
-    "instagram": "",
-    "pinterest": "",
-    "flickr": "",
-    "linkedin": "",
-    "stackoverflow": ""
+    ],
+    "_Ctor": {}
   }
 }
