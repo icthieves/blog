@@ -1,18 +1,24 @@
 {
   "meta": {
+<<<<<<< HEAD
+    "username": "put your username here",
+    "repositoryName": "put your repository name here",
+    "branch": "gh-pages"
+=======
     "username": "icthieves",
     "repositoryName": "icthieves.github.io",
     "branch": "gh-pages",
     "cname": ""
+>>>>>>> master
   },
   "theme": {
     "name": "casper"
   },
   "urls": {
-    "site": "https://icthieves.github.io/blog",
-    "hubpress": "https://icthieves.github.io/blog",
-    "theme": "//icthieves.github.io/blog/themes/casper",
-    "images": "https://icthieves.github.io/blog/images"
+    "site": "https://icthieves.github.io",
+    "hubpress": "https://icthieves.github.io",
+    "theme": "//icthieves.github.io/themes/casper",
+    "images": "https://icthieves.github.io/images"
   },
   "initialisationConfigComponent": {
     "name": "initialise-configuration",

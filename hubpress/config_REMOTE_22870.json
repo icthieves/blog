@@ -9,10 +9,10 @@
     "name": "casper"
   },
   "urls": {
-    "site": "https://icthieves.github.io/blog",
-    "hubpress": "https://icthieves.github.io/blog",
-    "theme": "//icthieves.github.io/blog/themes/casper",
-    "images": "https://icthieves.github.io/blog/images"
+    "site": "https://icthieves.github.io",
+    "hubpress": "https://icthieves.github.io",
+    "theme": "//icthieves.github.io/themes/casper",
+    "images": "https://icthieves.github.io/images"
   },
   "initialisationConfigComponent": {
     "name": "initialise-configuration",
