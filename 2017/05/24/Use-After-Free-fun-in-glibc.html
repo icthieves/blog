@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Pwnable.kr - UAF Writeup</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://icthieves.github.io/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//icthieves.github.io/themes/casper/assets/css/screen.css?v=1496940890807" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
+    <meta name="referrer" content="origin" />
+    
+    <meta property="og:site_name" content="Infosec/CTF Notes" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Pwnable.kr - UAF Writeup" />
+    <meta property="og:description" content="Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices an error, please let me know. I don&amp;#8217;t know what i don&amp;#8217;t know, and i sure don&amp;" />
+    <meta property="og:url" content="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
+    <meta property="og:image" content="/images/covers/pwnable.png" />
+    <meta property="article:published_time" content="2017-05-24T00:00:00.000Z" />
+    <meta property="article:tag" content="use-after-free" />
+    <meta property="article:tag" content="pwnable.kr" />
+    <meta property="article:tag" content="ctf" />
+    <meta property="article:tag" content="writeups" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pwnable.kr - UAF Writeup" />
+    <meta name="twitter:description" content="Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices an error, please let me know. I don&amp;#8217;t know what i don&amp;#8217;t know, and i sure don&amp;" />
+    <meta name="twitter:url" content="https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html" />
+    <meta name="twitter:image:src" content="/images/covers/pwnable.png" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "Infosec/CTF Notes",
+    "author": {
+        "@type": "Person",
+        "name": "icthieves",
+        "image": "https://avatars3.githubusercontent.com/u/10093869?v=3",
+        "url": "https://icthieves.github.io/author/icthieves/",
+        "description": "Computer Science student.\r\nC fanboy.\r\nDork."
+    },
+    "headline": "Pwnable.kr - UAF Writeup",
+    "url": "https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html",
+    "datePublished": "2017-05-24T00:00:00.000Z",
+    "image": "/images/covers/pwnable.png",
+    "keywords": "use-after-free, pwnable.kr, ctf, writeups",
+    "description": "Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices an error, please let me know. I don&amp;#8217;t know what i don&amp;#8217;t know, and i sure don&amp;"
+}
+    </script>
+
+    <meta name="generator" content="HubPress" />
+    <link rel="alternate" type="application/rss+xml" title="Infosec/CTF Notes" href="https://icthieves.github.io/rss/" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/atom-one-dark.min.css">
+</head>
+<body class="post-template tag-use-after-free tag-pwnablekr tag-ctf tag-writeups nav-closed">
+
+    
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head " style="background-image: url(/images/covers/pwnable.png)">
+    <nav class="main-nav overlay clearfix">
+        
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post tag-use-after-free tag-pwnablekr tag-ctf tag-writeups">
+
+        <header class="post-header">
+            <h1 class="post-title">Pwnable.kr - UAF Writeup</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2017-05-24">24 May 2017</time>  on <a href="https://icthieves.github.io/tag/use-after-free/">use-after-free</a>, <a href="https://icthieves.github.io/tag/pwnablekr/">pwnable.kr</a>, <a href="https://icthieves.github.io/tag/ctf/">ctf</a>, <a href="https://icthieves.github.io/tag/writeups/">writeups</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Disclaimer: I am but a Padawan of the infosec arts. At the time of writing i have about two months of experience. If you or a fellow graybeard notices an error, please let me know. I don&#8217;t know what i don&#8217;t know, and i sure don&#8217;t know a lot.</em></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_challenge_description">Challenge Description:</h4>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Mommy, what is Use After Free bug?
+ssh <a href="mailto:uaf@pwnable.kr">uaf@pwnable.kr</a> -p2222 (pw:guest)</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_first_impressions">First Impressions:</h4>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/uaf1.png" alt="The Challenge Directory">
+</div>
+</div>
+<div class="paragraph">
+<p>Here we find the usual readable source code, executable binary, and unreadable flag.</p>
+</div>
+<div class="paragraph">
+<p>Looking at the source code we see that it defines a simple virtual class (Human) and its two subclasses (Man/Woman).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/main.png" alt="The uaf/cpp main() function">
+</div>
+</div>
+<div class="paragraph">
+<p>The switch block is what&#8217;s interesting to us at the moment.
+We are prompted with three options:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>[1] Call the <strong>introduce()</strong> method of both the Man and Woman objects.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Notice that both the Man* and Woman* from the <strong>new</strong> keyword are cast to <strong>Human</strong>*. Clearly, these objects are in the same class heirarchy, and Human is a common superclass. Further still, notice that we call introduce(), <em>A function with the same prototype, using two upcasted objects.</em> Either we are calling the <strong>introduce()</strong> method of the Human class, or there&#8217;s some as yet unseen polymorphism mechanism that deobfuscates our function call. Running the code, you can see that <strong>Man&#8594;introduce()</strong> and <strong>Woman&#8594;introduce()</strong> <em>do not produce the same output for identical calls</em>, therefore, <strong>they must be virtual functions.</strong></p>
+</div>
+<div class="paragraph">
+<p>(This is, of course, extremely obvious because the classes are both defined in this same readable file, but you can still figure out a lot without the class definitions.)</p>
+</div>
+<div class="paragraph">
+<p>This is a good time to take a look at the <strong>Human</strong> class and its subclasses.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/human.png" alt="The Human class and it's subclasses.">
+</div>
+</div>
+<div class="paragraph">
+<p>We can immediately see the goal of this challenge: find a way to call <strong>give_shell()</strong> in the <strong>Human</strong> class.
+Notice that the class contains two <em>virtual functions</em>, only one of which is overwritten by the subclasses.</p>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s look at the last option in the switch block.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>[3] Delete (and deconstruct) both the Man and Woman objects.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Huh, so we can delete the objects, then use their newly invalidated pointers to call a function.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/segfault.png" alt="Segfault by accessing a dangling pointer.">
+</div>
+</div>
+<div class="paragraph">
+<p>So, it&#8217;s clearly possible to <em>use</em> our pointers <em>after they are free&#8217;d</em>, but what weirdness can we cause with this?
+Well, this is where you would start googling "use after free", and eventually you might find <a href="https://sploitfun.wordpress.com/2015/02/10/understanding-glibc-malloc/">this extremely good article on glibc&#8217;s malloc() internals</a>, and <a href="https://sourceware.org/glibc/wiki/MallocInternals">this very handy reference for glibc malloc()</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_analysis">Analysis</h4>
+<div class="paragraph">
+<p>After reading the articles linked above, you might start to see how a Use-After-Free vulnerability can be exploited. Because it is extremely expensive for a process to allocate memory through syscalls like <strong>sbrk()</strong> and <strong>mmap()</strong>, glibc <strong>malloc()</strong> avoids this as much as possible by maintaining sorted "bins" of unallocated memory.</p>
+</div>
+<div class="paragraph">
+<p>When <strong>malloc()</strong> is called, It searches through its binlists for the first free chunk of adequate size. If one is found, It resizes the chunk (if necessary) and returns a pointer to the start of the chunk&#8217;s data section.
+That means if we <strong>free()</strong> and object, then <em>allocate something of the same size</em>, there is a 99% chance that we will get a pointer to <strong>exact same chunk that we just free&#8217;d.</strong></p>
+</div>
+<div class="paragraph">
+<p>But how can this be exploited?
+Well, We know we can call a function from  the <strong>Man</strong> and <strong>Woman</strong> classes after they are free&#8217;d and we know that we can potentially write arbitrary data to the chunk their dangling pointers refer to.
+The key insight to exploiting this, is abusing C++'s <em>Vtables</em></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/vtables.png" alt="Vtable memory block">
+</div>
+</div>
+<div class="paragraph">
+<p><a href="http://www.fuzzysecurity.com/tutorials/expDev/11.html">Image Source</a></p>
+</div>
+<div class="paragraph">
+<p>C++ polymorphism requires some compiler trickery to work properly. For example, if i have an instance of <strong>Man</strong> and i cast it to <strong>Human</strong>, what happens when i call <strong>introduce()</strong>?
+We would expect <strong>Man&#8594;introduce()</strong> to be invoked, and indeed this is what happens. But how did we know (given a <strong>Human</strong> pointer, which was the "real" function to call?</p>
+</div>
+<div class="paragraph">
+<p>This is where <em>Vtables</em> come in, and while the specifics vary between compilers (the standard specifies the language, not the implementation) we&#8217;ll cover the general idea.
+Every class instance in a C++ program has a <em>Vtable</em>, which is included <strong>as the first member of the object</strong>. This table is an ordered list of function pointers that point to the methods of this particular class in the class heirarchy. If a class inherits a method, then its Vtable entry for that method will be the same pointer as its parent (to prevent repeating an identical method).</p>
+</div>
+<div class="paragraph">
+<p>Because an object&#8217;s type may not be known until runtime, the vtables for related classes <strong>must be in the same order</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/call-introduce.png" alt="Disassembly of the switch block">
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a radare2 control flow graph of the <strong>uaf</strong> binary. notice the block at <strong>0x13ab</strong>. We know from analyzing the cmp instructions to get here that this must be the block that calls <strong>Man&#8594;introduce()</strong> and <strong>Women&#8594;introduce()</strong>.
+And, indeed, we can see two <strong>call</strong> instructions, with nearly identical arguments.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s go over this segment byte by byte:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>mov rax, qword [local_18h]</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>This instruction loads a value at address <strong>local_18h</strong> to rax.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>mov rax, qword [rax]</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>This is telling. We&#8217;re <em>dereferencing</em> the value we just stored. clearly, <strong>local_18h</strong> must be a pointer to something.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>add rax,8</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>now we add an offset of 8 bytes.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>mov rax, qword [rax]
+call rax</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>And we <em>dereference the register again and call it!</em></p>
+</div>
+<div class="paragraph">
+<p>This tells us some important information: We take a pointer to a pointer, add an offset, and call it.</p>
+</div>
+<div class="paragraph">
+<p>Thinking back to the description of Vtables above, We can start to piece together what is happening here.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>local_18h</strong> is the start of the Vtable for this object</p>
+</li>
+<li>
+<p><strong>The second entry</strong> of the vtable (local_18h+0x8) is the method we are calling.</p>
+</li>
+<li>
+<p>looking to the second <strong>call instruction</strong>, we can see that it uses the very next address as its vtable pointer, and <strong>the exact same 0x8 offset</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Now, thinking back to the offsets used for the Vtable pointer: We know that the Vtables of related classes <strong>must have the same ordering</strong>, so <strong>local_18h+0x8</strong> and <strong>local_20h+0x8</strong> must be different implementations of the same function (in this case, <strong>introduce()</strong>). But if <strong>introduce()</strong> is the second method in both these classes, What is the first? What is <strong>local_18h</strong>?</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exploitation">Exploitation</h4>
+<div class="paragraph">
+<p>One last time, let&#8217;s go back to the source code, this time looking at the <strong>Human</strong> class.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/human.png" alt="Human class">
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that there is indeed a method defined before <strong>introduce()</strong>, which is <strong>give_shell()</strong>. Now all the pieces snap into place. Since <strong>Man</strong> and <strong>Woman</strong> are derived classes of <strong>Human</strong>, they <strong>inherit the give_shell() function!</strong>
+Since this is very first method defined in the class heirarchy, this must be the first method in the vtable, <strong>local_18h</strong> and <strong>local_20h</strong> (remember, inherited methods will point to the same function.)</p>
+</div>
+<div class="paragraph">
+<p><strong>All we need to do to call give_shell() instead of introduce(), is subtract 0x8 from the vtable entry for introduce(), and allocate it to the free&#8217;d chunk.</strong> Then, when we call <strong>Man&#8594;introduce()</strong>, it&#8217;ll call the method before it in the vtable.</p>
+</div>
+<div class="paragraph">
+<p>Great! we&#8217;ve solved the logic of the challenge <em>without even needing to run the program.</em>
+To get our final address, we just need to debug the program, and break on the <strong>call</strong> to <strong>introduce()</strong>. Taking the address of this method, subtracting 0x8, and writing it to the front of a 24-Byte chunk with option <strong>2</strong>, should effectively confuse the program into calling <strong>give_shell()</strong> instead of <strong>introduce()</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The rest is just tying everything together.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_execution">Execution</h4>
+<div class="paragraph">
+<p>Let&#8217;s log back into pwnable.kr and gather the last bit of information we need, the address of the <strong>Man()</strong> vtable.</p>
+</div>
+<div class="paragraph">
+<p>We load up the <strong>uaf</strong> binary in radare and debug it.
+disassemble <strong>main()</strong> and find the start of the block that calls <strong>introduce()</strong></p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>s sym.main</p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>pdf</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>(this can also be done visually with <em>VV</em> instead of <em>pdf</em>, but i thought i&#8217;d show some other viewing modes.)</p>
+</div>
+<div class="paragraph">
+<p>image::/images/blog/uaf/breakpoint.png</p>
+</div>
+<div class="paragraph">
+<p>here we can see that the start of the block is at <strong>0x400FCD</strong>.
+We&#8217;ll set this as our next breakpoint and continue.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>db 0x400fcd</p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>dc</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s step through the code and look at the registers.
+We know from our static analysis that the address to <strong>introduce()</strong> will be in <strong>RAX</strong> at the call instruction.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/introduce-addr.png" alt="Finally, the address of the introduce method">
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that i have stopped execution at <strong>0x400fd8</strong>, (marked in blue with <strong>RIP</strong>), this is immediately after the offset is added, so <strong>RAX</strong> must now contain the <strong>Vtable entry for introduce()</strong></p>
+</div>
+<div class="paragraph">
+<p>We can see from the debug registers that <strong>RAX</strong> is <strong>0x401578</strong>.
+This is the <strong>address</strong> of the Vtable entry for <strong>introduce()</strong> (the currently marked instruction, mov rdx, [rax] has not been processed yet.)
+We had to add an offset of <strong>0x8</strong> to get here, so to get the first method in the Vtable we should <strong>subtract 0x10</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Now, all we have to do is write this value <em>in little endian format</em> to a file, pad it to 24 bytes, and allocate it twice in <strong>uaf</strong> after freeing the objects.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/blog/uaf/pwned.png" alt="Victory!">
+</div>
+</div>
+<div class="paragraph">
+<p>And finally, we can read the flag.</p>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="https://icthieves.github.io/author/icthieves/" style="background-image: url(https://avatars3.githubusercontent.com/u/10093869?v&#x3D;3)"><span class="hidden">icthieves's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="https://icthieves.github.io/author/icthieves/">icthieves</a></h4>
+
+                    <p>Computer Science student.
+C fanboy.
+Dork.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">British Columbia</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Pwnable.kr%20-%20UAF%20Writeup&amp;url=https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://icthieves.github.io/2017/05/24/Use-After-Free-fun-in-glibc.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+</aside>
+
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="https://icthieves.github.io">Infosec/CTF Notes</a> &copy; 2017</section>
+            <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();
+      </script>
+       
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1496940890807"></script>
+    <script type="text/javascript" src="//icthieves.github.io/themes/casper/assets/js/index.js?v=1496940890807"></script>
+
+</body>
+</html>

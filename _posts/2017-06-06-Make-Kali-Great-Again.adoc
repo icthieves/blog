@@ -1,0 +1,59 @@
+= Living with Kali - Installing Chrome
+// See https://hubpress.gitbooks.io/hubpress-knowledgebase/content/ for information about the parameters.
+:hp-image: /images/covers/chrome.png
+:published_at: 2017-06-06
+:hp-tags: kali, linux, convenience, chrome
+:hp-alt-title: Make Kali Great Again
+
+### How to ruin the Kali distribution by making it usable for day-to-day use
+
+__Disclaimer: Kali is meant to be secure, not convenient. The reader should note that messing with Kali as described in this article means to sacrifice some of that security. If, Like me, you don't use Kali in a professional capacity, then this is probably a fair trade.__
+
+I recently switch from Parrot to Kali, and the first thing i noticed was that Kali takes itself much more seriously. There's no Office suite, and the only browser in the Kali repos is Firefox ESR.
+
+I decided to make some minor adjustments to improve my quality of life.
+
+
+### Installing Chrome
+
+I'm sure half of you reading just recoiled in disgust. Allow me to defend myself:
+
+- It's fast
+- It's easier to set-up across all of my devices
+- I'm just a student. This machine isn't being held to the same security standards as someone who actually knows what they're doing.
+
+It's fairly straightforward.
+
+- link:https://www.google.ca/chrome/browser/features.html[Get Chrome]
+- install *gdebi*
+
+> apt-get install gdebi
+
+- install chrome
+
+
+> gdebi google-chrome-stable_current_amd64.deb
+
+- If you run Kali as __root__, Then chrome will complain that this is a horrible idea (spoiler: it is.) Fortunately, this is easy to remedy.
+
+First, We add a new user just for chrome
+
+> adduser chromeuser
+
+Next, edit */usr/share/applications/google-chrome.desktop* and change every *Exec=* line by prepending *sudo -u chromeuser*. Now every time you launch chrome from dash2dock it will be run as an unpriviledged user.
+
+You also need to give *xhost* permissions to chromeuser's applications, otherwise Chrome won't be able to connect to the xserver and can't spawn windows. I did this by editing my *~/.bashrc* file and adding the line:
+
+> xhost +SI:localuser:chromeuser
+
+This will add __only chromeuser__ to the xserver ACL. This is probably safer than adding all local users with *xhost local:*. 
+you can check which users are authorized by running *xhost*.
+
+Now, whenever you launch chrome from dash2dock or the desktop it'll run as an unpriviledged user.
+
+__Note: The other way to do this, if you absolutely must run Chrome as root, is to append --no-sandbox instead of sudo. Don't do this.__
+
+Now, install link:https://cryptup.org/[Cryptup] and link:https://lastpass.com/[lastpass] and your other preferred extensions.
+
+
+
